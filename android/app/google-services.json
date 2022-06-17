@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1024189305437",
+    "firebase_url": "https://recipe-randomizer-97e02-default-rtdb.firebaseio.com",
+    "project_id": "recipe-randomizer-97e02",
+    "storage_bucket": "recipe-randomizer-97e02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024189305437:android:dad2911bde5bab146973b4",
+        "android_client_info": {
+          "package_name": "edu.cpp.recipe_ran"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024189305437-46p8652rh1dihpondu27f9em96vd1e2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiKig6SigxPr4xumWu8A58Sg739a5IABw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024189305437-46p8652rh1dihpondu27f9em96vd1e2s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

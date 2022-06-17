@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_ran/add_a_recipe.dart';
 import 'package:recipe_ran/choose_a_meal.dart';
 
 class MainMenuPage extends StatefulWidget {
@@ -82,7 +83,11 @@ class _MainMenuPageState extends State<MainMenuPage> {
                   margin: const EdgeInsets.all(10),
                   child: ElevatedButton(
                     onPressed: () {
-
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AddARecipePage()
+                        )
+                      );
                     },
                     child: Text(
                       "Add Recipe",
