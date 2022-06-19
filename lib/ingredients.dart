@@ -46,9 +46,9 @@ class _IngredientsPageState extends State<IngredientsPage> {
                                       child: TextField(
                                         controller: _foodControllers[index],
                                         obscureText: false,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Ingredient',
+                                        decoration: InputDecoration(
+                                          border: const OutlineInputBorder(),
+                                          labelText: ("Ingredient ${index+1}"),
                                         ),
                                       ),
                                     ),

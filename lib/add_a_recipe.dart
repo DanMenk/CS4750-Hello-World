@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_ran/Recipe.dart';
 import 'package:recipe_ran/ingredients.dart';
+import 'package:recipe_ran/steps.dart';
 
 class AddARecipePage extends StatefulWidget {
   const AddARecipePage({Key? key}) : super(key: key);
@@ -179,7 +180,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
                         onPressed: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const AddARecipePage()
+                              MaterialPageRoute(builder: (context) => const StepsPage()
                               )
                           );
                         },
