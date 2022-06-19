@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_ran/Recipe.dart';
+import 'package:recipe_ran/ingredients.dart';
 
 class AddARecipePage extends StatefulWidget {
   const AddARecipePage({Key? key}) : super(key: key);
@@ -33,6 +34,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
     setState(() {
 
       _groupValue = value!;
+      recipe1.type = mealType;
     });
   }
     Future<void> initializeEmptyIngredientsAndSteps() async {
@@ -156,27 +158,41 @@ class _AddARecipePageState extends State<AddARecipePage> {
                         ),
                       ),
 
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const IngredientsPage()
+                              )
+                          );
+                        },
+                        child: Text("Ingredients"),
+
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const AddARecipePage()
+                              )
+                          );
+                        },
+                        child: Text("Recipe Steps"),
+
+                      ),
+                    )
+
 
                   ],
                 )
             ),
 
-
-            Column(
-              children: [
-                ListView.builder(
-                  itemExtent: ingredientsLength,
-                  scrollDirection: Axis.vertical,
-
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-
-                    );
-                  },
-
-                )
-              ],
-            )
           ],
         ),
       ),
