@@ -1,3 +1,6 @@
+
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_ran/Recipe.dart';
@@ -13,13 +16,10 @@ class AddARecipePage extends StatefulWidget {
 
 class _AddARecipePageState extends State<AddARecipePage> {
 
+  var ingredients = [];
+  var steps = [];
+  Recipe recipe1 = Recipe("", [""], [""], "");
 
-  late Recipe recipe1;
-  double ingredientsLength = 10;
-  double stepsLength = 10;
-
-  late String ingredient;
-  late String step;
 
   int _groupValue = 0;
   late String mealType;
@@ -38,59 +38,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
       recipe1.type = mealType;
     });
   }
-    Future<void> initializeEmptyIngredientsAndSteps() async {
-      var tmpFood = [];
-      FirebaseDatabase database = FirebaseDatabase.instance;
-      var tmpStep = [];
 
-      await database.ref().child("Recipes/Recipe0/steps").get()
-          .then((data) {
-        print("Successfully loaded steps.");
-
-        Map<dynamic, dynamic>? rules = data.value as Map?;
-        print(rules);
-        rules?.forEach((key, value) {
-
-          step = value;
-          tmpStep.add(step);
-        });
-      }).catchError((error) {
-        print("Hello! Failed to load steps.");
-        print(error);
-      });
-
-      await database.ref().child("Recipes/Recipe0/ingredients").get()
-          .then((data) {
-        print("Successfully loaded ingredients.");
-
-
-
-        Map<dynamic, dynamic>? food = data.value as Map?;
-        print(food);
-        food?.forEach((key, value) {
-
-          ingredient = value;
-          tmpFood.add(ingredient);
-
-          print(tmpFood);
-        });
-      }).catchError((error) {
-        print("Hi! Failed to load ingredients.");
-        print(error);
-      });
-      ;
-      recipe1 = Recipe("", tmpFood, tmpStep, "");
-
-      for(int i = 0; i < recipe1.steps.length; i++)
-      {
-
-        print(recipe1.ingredients.elementAt(i));
-        print(recipe1.steps.elementAt(i));
-      }
-    }
-  _AddARecipePageState() {
-    initializeEmptyIngredientsAndSteps();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +47,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
     double unitTitleHeightValue = deviceData.size.height * 0.01;
     double titlemultiplier = 5;
     double title = titlemultiplier * unitTitleHeightValue;
+    TextEditingController recipeNameCont = TextEditingController();
 
     return Scaffold(
       body: Center(
@@ -107,7 +56,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
             Expanded(
               flex: 20,
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 child: Text(
                     "Add a Recipe",
                     style: TextStyle(
@@ -124,8 +73,9 @@ class _AddARecipePageState extends State<AddARecipePage> {
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.all(10),
-                      child: const TextField(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: recipeNameCont,
                         obscureText: false,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -135,7 +85,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
 
                     ),
                     Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -144,48 +94,121 @@ class _AddARecipePageState extends State<AddARecipePage> {
                               groupValue: _groupValue,
                               onChanged: radioValueChanged
                           ),
-                          Text("Breakfast"),
+                          const Text("Breakfast"),
                           Radio(
                               value: 2,
                               groupValue: _groupValue,
                               onChanged: radioValueChanged),
-                          Text("Lunch"),
+                          const Text("Lunch"),
                           Radio(
                               value: 3,
                               groupValue: _groupValue,
                               onChanged: radioValueChanged),
-                          Text("Dinner"),
+                          const Text("Dinner"),
                         ],
                         ),
                       ),
 
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const IngredientsPage()
-                              )
-                          );
-                        },
-                        child: Text("Ingredients"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(5),
+                          child: ElevatedButton(
+                            onPressed: () async {
 
-                      ),
+                                print(recipe1.ingredients);
+                               ingredients = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => IngredientsPage(recipe1.ingredients, recipe1.ingredients.length)
+                                  )
+                              );
+                               recipe1.ingredients = ingredients;
+                               print(recipe1.ingredients);
+                            },
+                            child: const Text("Ingredients"),
+
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(5),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              print(recipe1.steps.length);
+                              steps = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => StepsPage(recipe1.steps, recipe1.steps.length)
+                                  )
+                              );
+                              recipe1.steps = steps;
+                              print(recipe1.steps);
+                            },
+                            child: const Text("Recipe Steps"),
+
+                          ),
+                        ),
+                      ],
                     ),
 
+
                     Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(5),
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const StepsPage()
-                              )
-                          );
-                        },
-                        child: Text("Recipe Steps"),
+                          recipe1 = Recipe(recipeNameCont.text, ingredients, steps, recipe1.type);
+                          var recipe = {
+                            "ingredients": recipe1.ingredients,
+                            "recipeName": recipe1.recipeName,
+                            "steps": recipe1.steps,
+                            "type": recipe1.type,
+                          };
+                          var rand = Random().nextInt(4294967296);
+                          for(int i = 0; i < recipe1.ingredients.length; i++)
+                            {
+                              FirebaseDatabase.instance.ref().child("Ingredients/ingredient$i")
+                                  .set(recipe1.ingredients[i])
+                                  .then((value) {
+                                    print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                          if(recipe1.type == "Breakfast")
+                            {
+                              FirebaseDatabase.instance.ref().child("Recipes/Breakfast/Recipe$rand")
+                              .set(recipe)
+                              .then((value) {
+                                print("Added the Breakfast recipe!");
+                              }).catchError((error) {
+                                print("Failed to add the Breakfast recipe!");
+                                print(error.toString());
+                              });
+                            } else if(recipe1.type == "Lunch")
+                          {
+                            FirebaseDatabase.instance.ref().child("Recipes/Lunch/Recipe$rand")
+                            .set(recipe)
+                            .then((value) {
+                              print("Added the Lunch recipe!");
+                            }).catchError((error) {
+                              print("Failed to add the Lunch recipe!");
+                              print(error.toString());
+                            });
+                          } else
+                            {
+                              FirebaseDatabase.instance.ref().child("Recipes/Dinner/Recipe$rand")
+                              .set(recipe)
+                              .then((value) {
+                                print("Added the Dinner recipe!");
+                              }).catchError((error) {
+                                print("Failed to add the Dinner recipe!");
+                                print(error.toString());
+                              });
+                            }
 
+
+                        },
+                        child: const Text("Done"),
                       ),
                     )
 

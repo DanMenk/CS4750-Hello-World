@@ -1,10 +1,10 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import 'Recipe.dart';
-
 class IngredientsPage extends StatefulWidget {
-  const IngredientsPage({Key? key}) : super(key: key);
+   const IngredientsPage(this.ingred, this.long, {Key? key}) : super(key: key);
+
+  final int long;
+  final List<dynamic> ingred;
 
   @override
   State<IngredientsPage> createState() => _IngredientsPageState();
@@ -15,10 +15,30 @@ class _IngredientsPageState extends State<IngredientsPage> {
 
 
 
-  var ingredients = [];
-  final List<TextEditingController> _foodControllers = [TextEditingController()];
-  final ScrollController _scroll = ScrollController();
+  late var ingredients;
+  late int size;
+  late List<TextEditingController> _foodControllers = [];
+  late ScrollController _scroll;
 
+  @override
+  void initState() {
+    super.initState();
+    size = widget.long;
+    ingredients = [];
+    _scroll = ScrollController();
+    for(int i = 0; i < size; i++)
+    {
+      _foodControllers.add(TextEditingController(text: widget.ingred[i]));
+
+    }
+
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
 
   @override
@@ -63,6 +83,8 @@ class _IngredientsPageState extends State<IngredientsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
+                        width: 120,
+                        height: 100,
                         margin: const EdgeInsets.all(5),
                         child: ElevatedButton(
                           onPressed: () {
@@ -72,30 +94,57 @@ class _IngredientsPageState extends State<IngredientsPage> {
 
                             });
                           },
-                          child: const Text('Add Another Ingredient'),
+                          child: const Text(
+                              'Add Another Ingredient',
+                              textAlign: TextAlign.center,),
                         ),
                       ),
                       Container(
+                        width: 120,
+                        height: 100,
                         margin: const EdgeInsets.all(5),
                         child: ElevatedButton(
                           onPressed: () {
-                            for(var ingredient in _foodControllers)
-                            {
-                              ingredients.remove(ingredient.text);
-                            }
-                            for(var ingredient in _foodControllers)
-                            {
-                              ingredients.add(ingredient.text);
-                            }
-                            print(ingredients);
-                            Navigator.pop(context, ingredients);
+                            var foodSize = _foodControllers.length;
+                            for(int i = foodSize-1; i > 0; i--)
+                              {
+                                if(_foodControllers[i].text == "")
+                                  {
+                                    _foodControllers.removeAt(i);
+                                  }
+                              }
+                            _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                            setState(() {
 
+                            });
                           },
-                          child: const Text('Done'),
+                          child: const Text(
+                              "Remove Empty Ingredients",
+                              textAlign: TextAlign.center,),
                         ),
                       ),
+
                     ],
-                  )
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        for(var ingredient in _foodControllers)
+                        {
+                          ingredients.remove(ingredient.text);
+                        }
+                        for(var ingredient in _foodControllers)
+                        {
+                          ingredients.add(ingredient.text);
+                        }
+
+                        Navigator.pop(context, ingredients);
+
+                      },
+                      child: const Text('Done'),
+                    ),
+                  ),
                 ],
               ),
 
