@@ -23,10 +23,17 @@ class _StepsPageState extends State<StepsPage> {
     size = widget.long;
     steps = [];
     _scroll = ScrollController();
-    for(int i = 0; i < size; i++)
+    if(size < 1)
     {
-      _stepControllers.add(TextEditingController(text: widget.ste[i]));
+      _stepControllers.add(TextEditingController());
+    }
+    else
+    {
+      for(int i = 0; i < size; i++)
+      {
+        _stepControllers.add(TextEditingController(text: widget.ste[i]));
 
+      }
     }
 
 
@@ -91,7 +98,7 @@ class _StepsPageState extends State<StepsPage> {
                         });
                       },
                       child: const Text(
-                        'Add Another Ingredient',
+                        'Add Another Step',
                         textAlign: TextAlign.center,),
                     ),
                   ),

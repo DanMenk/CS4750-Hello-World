@@ -26,11 +26,19 @@ class _IngredientsPageState extends State<IngredientsPage> {
     size = widget.long;
     ingredients = [];
     _scroll = ScrollController();
-    for(int i = 0; i < size; i++)
-    {
-      _foodControllers.add(TextEditingController(text: widget.ingred[i]));
+    if(size < 1)
+      {
+        _foodControllers.add(TextEditingController());
+      }
+    else
+      {
+        for(int i = 0; i < size; i++)
+        {
+          _foodControllers.add(TextEditingController(text: widget.ingred[i]));
 
-    }
+        }
+      }
+
 
 
   }

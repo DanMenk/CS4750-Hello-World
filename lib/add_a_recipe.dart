@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:recipe_ran/Recipe.dart';
 import 'package:recipe_ran/ingredients.dart';
 import 'package:recipe_ran/steps.dart';
 
@@ -18,27 +17,43 @@ class _AddARecipePageState extends State<AddARecipePage> {
 
   var ingredients = [];
   var steps = [];
-  Recipe recipe1 = Recipe("", [""], [""], "");
+  TextEditingController recipeNameCont = TextEditingController();
 
-
+  late int childrenCount;
   int _groupValue = 0;
-  late String mealType;
 
-  void radioValueChanged(int? value) {
-    if(_groupValue == 1) {
-      mealType = "Breakfast";
-    } else if (_groupValue == 2) {
-      mealType = "Lunch";
-    } else {
-      mealType = "Dinner";
-    }
-    setState(() {
+  void getDatabaseRecipeAmount() {
+    if(_groupValue == 1)
+      {
+        FirebaseDatabase.instance.ref().child("Recipes/Breakfast").onChildChanged.listen((event) {
+          childrenCount = event.snapshot.children.length;
+          print("Breakfast! $childrenCount");
+        });
+      }
+    else if(_groupValue == 2)
+      {
+        FirebaseDatabase.instance.ref().child("Recipes/Breakfast").onChildChanged.listen((event) {
+          childrenCount = event.snapshot.children.length;
+          print("Lunch! $childrenCount");
+        });
+      }
+    else
+      {
+        FirebaseDatabase.instance.ref().child("Recipes/Dinner").onChildChanged.listen((event) {
+          childrenCount = event.snapshot.children.length;
+          print("Dinner! $childrenCount");
+        });
+      }
 
-      _groupValue = value!;
-      recipe1.type = mealType;
-    });
   }
 
+  void radioValueChanged(int? value) {
+
+    setState(() {
+      _groupValue = value!;
+      print(_groupValue);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +62,6 @@ class _AddARecipePageState extends State<AddARecipePage> {
     double unitTitleHeightValue = deviceData.size.height * 0.01;
     double titlemultiplier = 5;
     double title = titlemultiplier * unitTitleHeightValue;
-    TextEditingController recipeNameCont = TextEditingController();
 
     return Scaffold(
       body: Center(
@@ -117,14 +131,14 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           child: ElevatedButton(
                             onPressed: () async {
 
-                                print(recipe1.ingredients);
+                                print(ingredients);
                                ingredients = await Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => IngredientsPage(recipe1.ingredients, recipe1.ingredients.length)
+                                  MaterialPageRoute(builder: (context) => IngredientsPage(ingredients, ingredients.length)
                                   )
                               );
-                               recipe1.ingredients = ingredients;
-                               print(recipe1.ingredients);
+
+                               print(ingredients);
                             },
                             child: const Text("Ingredients"),
 
@@ -134,14 +148,14 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           margin: const EdgeInsets.all(5),
                           child: ElevatedButton(
                             onPressed: () async {
-                              print(recipe1.steps.length);
+                              print(steps.length);
                               steps = await Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => StepsPage(recipe1.steps, recipe1.steps.length)
+                                  MaterialPageRoute(builder: (context) => StepsPage(steps, steps.length)
                                   )
                               );
-                              recipe1.steps = steps;
-                              print(recipe1.steps);
+
+                              print(steps);
                             },
                             child: const Text("Recipe Steps"),
 
@@ -154,19 +168,20 @@ class _AddARecipePageState extends State<AddARecipePage> {
                     Container(
                       margin: const EdgeInsets.all(5),
                       child: ElevatedButton(
-                        onPressed: () {
-                          recipe1 = Recipe(recipeNameCont.text, ingredients, steps, recipe1.type);
+                        onPressed: () async {
+                          print(ingredients);
+
                           var recipe = {
-                            "ingredients": recipe1.ingredients,
-                            "recipeName": recipe1.recipeName,
-                            "steps": recipe1.steps,
-                            "type": recipe1.type,
+                            "ingredients": ingredients,
+                            "recipeName": recipeNameCont.text,
+                            "steps": steps,
                           };
                           var rand = Random().nextInt(4294967296);
-                          for(int i = 0; i < recipe1.ingredients.length; i++)
+                          for(int i = 0; i < ingredients.length; i++)
                             {
-                              FirebaseDatabase.instance.ref().child("Ingredients/ingredient$i")
-                                  .set(recipe1.ingredients[i])
+                              var rand1 = Random().nextInt(4294967296);
+                              await FirebaseDatabase.instance.ref().child("Ingredients/ingredient$rand1")
+                                  .set(ingredients[i])
                                   .then((value) {
                                     print("Added the ingredient!");
                               }).catchError((error) {
@@ -174,9 +189,10 @@ class _AddARecipePageState extends State<AddARecipePage> {
                                 print(error.toString());
                               });
                             }
-                          if(recipe1.type == "Breakfast")
+                          print("Done adding ingredients!");
+                          if(_groupValue == 1)
                             {
-                              FirebaseDatabase.instance.ref().child("Recipes/Breakfast/Recipe$rand")
+                              await FirebaseDatabase.instance.ref().child("Recipes/Breakfast/Recipe$rand")
                               .set(recipe)
                               .then((value) {
                                 print("Added the Breakfast recipe!");
@@ -184,9 +200,9 @@ class _AddARecipePageState extends State<AddARecipePage> {
                                 print("Failed to add the Breakfast recipe!");
                                 print(error.toString());
                               });
-                            } else if(recipe1.type == "Lunch")
+                            } else if(_groupValue == 2)
                           {
-                            FirebaseDatabase.instance.ref().child("Recipes/Lunch/Recipe$rand")
+                            await FirebaseDatabase.instance.ref().child("Recipes/Lunch/Recipe$rand")
                             .set(recipe)
                             .then((value) {
                               print("Added the Lunch recipe!");
@@ -196,7 +212,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
                             });
                           } else
                             {
-                              FirebaseDatabase.instance.ref().child("Recipes/Dinner/Recipe$rand")
+                              await FirebaseDatabase.instance.ref().child("Recipes/Dinner/Recipe$rand")
                               .set(recipe)
                               .then((value) {
                                 print("Added the Dinner recipe!");
@@ -205,7 +221,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
                                 print(error.toString());
                               });
                             }
-
+                          Navigator.pop(context);
 
                         },
                         child: const Text("Done"),
