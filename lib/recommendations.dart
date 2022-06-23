@@ -34,7 +34,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
     const double buttonWidthMod = 1;
     var deviceData = MediaQuery.of(context);
     double buttonWidth = buttonWidthMod*deviceData.size.width;
-    
+
     double unitTextHeightValue = deviceData.size.height * 0.01;
     double buttonMultiplier = 2;
     double buttonHeight = buttonMultiplier * unitTextHeightValue;

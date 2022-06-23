@@ -141,25 +141,11 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
 
                                    for(int recipe = 0; recipe < recipes.length; recipe++)
                                      {
-                                       double similarity = 0;
+                                       var recipeIngredients = recipes[recipe]['ingredients'];
+                                       var items = chosenIngredients.where((ingredient) => recipeIngredients.contains(ingredient));
+                                       int similarity = items.length;
                                        int totalIngredients = recipes[recipe]['ingredients'].length;
-                                       print("Amount of Ingredients for Recipe $recipe: $totalIngredients");
 
-                                       for(int items = 0; items < totalIngredients; items++)
-                                         {
-                                           for(int item = 0; item < totalIngredients; item++)
-                                           {
-                                              if(item < chosenIngredients.length && chosenIngredients[item] == recipes[recipe]['ingredients'][items] )
-                                                {
-                                                  similarity++;
-                                                }
-
-                                           }
-
-
-                                         }
-
-                                       print("${similarity/totalIngredients}");
                                        if( similarity / totalIngredients >= 0.6 && similarity / totalIngredients < 0.8)
                                        {
                                          recommended.add(recipes[recipe]);
@@ -175,6 +161,7 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
                                        }
 
                                      }
+
                                    print("Recipes suggested!");
 
 

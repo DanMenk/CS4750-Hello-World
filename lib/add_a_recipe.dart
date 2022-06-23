@@ -131,14 +131,14 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           child: ElevatedButton(
                             onPressed: () async {
 
-                                print(ingredients);
+                                print("Input: $ingredients");
                                ingredients = await Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => IngredientsPage(ingredients, ingredients.length)
                                   )
                               );
 
-                               print(ingredients);
+                               print("Output 2: $ingredients");
                             },
                             child: const Text("Ingredients"),
 
