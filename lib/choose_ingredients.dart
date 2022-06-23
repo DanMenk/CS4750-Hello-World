@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:recipe_ran/recommendations.dart';
 
 class ChooseIngredientsPage extends StatefulWidget {
-  const ChooseIngredientsPage(this.meal, this.ingredients, this.values, {Key? key}) : super(key: key);
-  final List<dynamic> ingredients;
+  const ChooseIngredientsPage(this.meal, this.dairy, this.fruit, this.grain, this.protein, this.vegetable, this.values, {Key? key}) : super(key: key);
+  final List<dynamic> dairy;
+  final List<dynamic> fruit;
+  final List<dynamic> grain;
+  final List<dynamic> protein;
+  final List<dynamic> vegetable;
   final List<dynamic> values;
+
   final String meal;
 
   @override
@@ -19,7 +24,11 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
 
 
   late String meal;
-  late var ingredients = [];
+  late var dairy = [];
+  late var fruit = [];
+  late var grain = [];
+  late var protein = [];
+  late var vegetable = [];
   late var chosenIngredients = [];
   late var values = [];
 
@@ -28,9 +37,13 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
 
 
     meal = widget.meal;
-    ingredients = widget.ingredients;
+    dairy = widget.dairy;
+    fruit = widget.fruit;
+    grain = widget.grain;
+    protein = widget.protein;
+    vegetable = widget.vegetable;
     values = widget.values;
-    for(int i = 0; i < ingredients.length; i++)
+    for(int i = 0; i < (dairy.length + fruit.length + grain.length + protein.length + vegetable.length); i++)
     {
       values.add(false);
     }
@@ -74,45 +87,269 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
                           )
                       ),
                     ),
+
                     Expanded(
                       flex: 70,
-                      child: ListView.builder(
-                        itemCount: ingredients.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            margin: const EdgeInsets.all(5),
-                            child:
-                                CheckboxListTile(
+                      child: SingleChildScrollView(
+                        physics: const ScrollPhysics(),
+                        child: Column(
+                            children: [
+                              ExpansionTile(
 
-                                title: Text(ingredients[index]),
-                                onChanged: (bool? value) {
+                                  title: const Text("Dairy"),
+                                  children: [
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: dairy.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          if (dairy.isEmpty)
+                                          {
+                                            return Container();
+                                          } else
+                                          {
+                                            return Container(
+                                              margin: const EdgeInsets.all(5),
+                                              child:
+                                              CheckboxListTile(
 
-                                  if(values[index] == false)
-                                    {
-                                      chosenIngredients.add(ingredients[index]);
-                                      values[index] = value;
-                                      setState((){
+                                                title: Text(dairy[index]),
+                                                onChanged: (bool? value) {
 
-                                      });
-                                    }
-                                  else {
-                                    chosenIngredients.remove(ingredients[index]);
-                                    values[index] = value;
-                                    setState((){
+                                                  if(values[index] == false)
+                                                  {
+                                                    chosenIngredients.add(dairy[index]);
+                                                    values[index] = value;
+                                                    setState((){
 
-                                    });
-                                  }
+                                                    });
+                                                  }
+                                                  else {
+                                                    chosenIngredients.remove(dairy[index]);
+                                                    values[index] = value;
+                                                    setState((){
 
-                                },
-                                value: values[index],
+                                                    });
+                                                  }
 
+                                                },
+                                                value: values[index],
+
+                                              ),
+
+                                            );
+                                          }
+
+
+                                        }
+                                    ),
+                                  ]
                               ),
+                              ExpansionTile(
+                                  title: const Text("Fruits"),
+                                  children: [
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: fruit.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          if (fruit.isEmpty)
+                                          {
+                                            return Container();
+                                          } else
+                                          {
+                                            return Container(
+                                              margin: const EdgeInsets.all(5),
+                                              child:
+                                              CheckboxListTile(
 
-                          );
-                        },
+                                                title: Text(fruit[index]),
+                                                onChanged: (bool? value) {
 
+                                                  if(values[index + dairy.length] == false)
+                                                  {
+                                                    chosenIngredients.add(fruit[index]);
+                                                    values[index + dairy.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+                                                  else {
+                                                    chosenIngredients.remove(fruit[index]);
+                                                    values[index + dairy.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+
+                                                },
+                                                value: values[index + dairy.length],
+
+                                              ),
+
+                                            );
+                                          }
+
+
+                                        }
+                                    ),
+                                  ]
+                              ),
+                              ExpansionTile(
+                                  title: const Text("Grains"),
+                                  children: [
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: grain.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          if (grain.isEmpty)
+                                          {
+                                            return Container();
+                                          } else
+                                          {
+                                            return Container(
+                                              margin: const EdgeInsets.all(5),
+                                              child:
+                                              CheckboxListTile(
+
+                                                title: Text(grain[index]),
+                                                onChanged: (bool? value) {
+
+                                                  if(values[index + dairy.length + fruit.length] == false)
+                                                  {
+                                                    chosenIngredients.add(grain[index]);
+                                                    values[index + dairy.length + fruit.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+                                                  else {
+                                                    chosenIngredients.remove(grain[index]);
+                                                    values[index + dairy.length + fruit.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+
+                                                },
+                                                value: values[index + dairy.length + fruit.length],
+
+                                              ),
+
+                                            );
+                                          }
+
+
+                                        }
+                                    ),
+                                  ]
+                              ),
+                              ExpansionTile(
+                                  title: const Text("Proteins"),
+                                  children: [
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: protein.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          if (protein.isEmpty)
+                                          {
+                                            return Container();
+                                          } else
+                                          {
+                                            return Container(
+                                              margin: const EdgeInsets.all(5),
+                                              child:
+                                              CheckboxListTile(
+
+                                                title: Text(protein[index]),
+                                                onChanged: (bool? value) {
+
+                                                  if(values[index + dairy.length + grain.length + fruit.length] == false)
+                                                  {
+                                                    chosenIngredients.add(protein[index]);
+                                                    values[index + dairy.length + grain.length + fruit.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+                                                  else {
+                                                    chosenIngredients.remove(protein[index]);
+                                                    values[index + dairy.length + grain.length + fruit.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+
+                                                },
+                                                value: values[index + dairy.length + grain.length + fruit.length],
+
+                                              ),
+
+                                            );
+                                          }
+
+
+                                        }
+                                    ),
+                                  ]
+                              ),
+                              ExpansionTile(
+                                  title: const Text("Vegetables"),
+                                  children: [
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: vegetable.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          if (vegetable.isEmpty)
+                                          {
+                                            return Container();
+                                          } else
+                                          {
+                                            return Container(
+                                              margin: const EdgeInsets.all(5),
+                                              child:
+                                              CheckboxListTile(
+
+                                                title: Text(vegetable[index]),
+                                                onChanged: (bool? value) {
+
+                                                  if(values[index + dairy.length + grain.length + protein.length + fruit.length] == false)
+                                                  {
+                                                    chosenIngredients.add(vegetable[index]);
+                                                    values[index + dairy.length + grain.length + protein.length + fruit.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+                                                  else {
+                                                    chosenIngredients.remove(vegetable[index]);
+                                                    values[index + dairy.length + grain.length + protein.length + fruit.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+
+                                                },
+                                                value: values[index + dairy.length + grain.length + protein.length + fruit.length],
+
+                                              ),
+
+                                            );
+                                          }
+
+
+                                        }
+                                    ),
+                                  ]
+                              ),
+                            ]
+                        ),
                       ),
                     ),
+
                     Expanded(
                       flex: 10,
                         child: Container(

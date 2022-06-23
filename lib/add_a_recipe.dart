@@ -16,6 +16,8 @@ class AddARecipePage extends StatefulWidget {
 class _AddARecipePageState extends State<AddARecipePage> {
 
   var ingredients = [];
+  var ingredientName = [];
+  var type = [];
   var steps = [];
   TextEditingController recipeNameCont = TextEditingController();
 
@@ -170,24 +172,73 @@ class _AddARecipePageState extends State<AddARecipePage> {
                       child: ElevatedButton(
                         onPressed: () async {
                           print(ingredients);
-
+                          for(int i = 0; i < ingredients.length; i++)
+                            {
+                              ingredientName.add(ingredients[i].ingredientName);
+                              type.add(ingredients[i].type);
+                            }
                           var recipe = {
-                            "ingredients": ingredients,
+                            "ingredients": ingredientName,
                             "recipeName": recipeNameCont.text,
                             "steps": steps,
+                            "type": type,
                           };
                           var rand = Random().nextInt(4294967296);
                           for(int i = 0; i < ingredients.length; i++)
                             {
                               var rand1 = Random().nextInt(4294967296);
-                              await FirebaseDatabase.instance.ref().child("Ingredients/ingredient$rand1")
-                                  .set(ingredients[i])
-                                  .then((value) {
+                              if(type[i] == 1)
+                                {
+                                  await FirebaseDatabase.instance.ref().child("Ingredients/Dairy/ingredient$rand1")
+                                      .set(ingredientName[i])
+                                      .then((value) {
                                     print("Added the ingredient!");
-                              }).catchError((error) {
-                                print("Failed to add ingredient!");
-                                print(error.toString());
-                              });
+                                  }).catchError((error) {
+                                    print("Failed to add ingredient!");
+                                    print(error.toString());
+                                  });
+                                } else if(type[i] == 2)
+                                  {
+                                    await FirebaseDatabase.instance.ref().child("Ingredients/Fruit/ingredient$rand1")
+                                        .set(ingredientName[i])
+                                        .then((value) {
+                                      print("Added the ingredient!");
+                                    }).catchError((error) {
+                                      print("Failed to add ingredient!");
+                                      print(error.toString());
+                                    });
+                                  } else if(type[i] == 3)
+                                    {
+                                      await FirebaseDatabase.instance.ref().child("Ingredients/Grain/ingredient$rand1")
+                                          .set(ingredientName[i])
+                                          .then((value) {
+                                        print("Added the ingredient!");
+                                      }).catchError((error) {
+                                        print("Failed to add ingredient!");
+                                        print(error.toString());
+                                      });
+                                    } else if(type[i] == 4)
+                                      {
+                                        await FirebaseDatabase.instance.ref().child("Ingredients/Protein/ingredient$rand1")
+                                            .set(ingredientName[i])
+                                            .then((value) {
+                                          print("Added the ingredient!");
+                                        }).catchError((error) {
+                                          print("Failed to add ingredient!");
+                                          print(error.toString());
+                                        });
+                                      } else
+                                        {
+                                          await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable/ingredient$rand1")
+                                              .set(ingredientName[i])
+                                              .then((value) {
+                                            print("Added the ingredient!");
+                                          }).catchError((error) {
+                                            print("Failed to add ingredient!");
+                                            print(error.toString());
+                                          });
+                                        }
+
                             }
                           print("Done adding ingredients!");
                           if(_groupValue == 1)

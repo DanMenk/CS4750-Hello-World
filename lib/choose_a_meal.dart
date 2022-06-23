@@ -25,22 +25,87 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
     double unitTextHeightValue = deviceData.size.height * 0.01;
     double buttonMultiplier = 2;
     double buttonHeight = buttonMultiplier * unitTextHeightValue;
+    
+    var dairy = [];
+    var fruit = [];
+    var grain = [];
+    var protein = [];
+    var vegetable = [];
+    var values = []; // for checkbox for ingredients on choose_ingredients page
+    var database = FirebaseDatabase.instance.ref();
 
-    var ingredients = [];
-    var values = [];
-
-    FirebaseDatabase.instance.ref().child("Ingredients")
+    database.child("Ingredients/Dairy")
         .get().then((value) {
-      print("Retrieved Ingredients!");
+      print("Retrieved Dairy!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
-        ingredients.add(value);
+        dairy.add(value);
 
       });
 
     }).catchError((error) {
-      print("Failed to get Ingredients");
+      print("Failed to get Dairy");
+      print(error.toString());
+    });
+
+    database.child("Ingredients/Fruit")
+        .get().then((value) {
+      print("Retrieved Fruits!");
+
+      Map? food = value.value as Map?;
+      food?.forEach((key, value) {
+        fruit.add(value);
+
+      });
+
+    }).catchError((error) {
+      print("Failed to get Fruits");
+      print(error.toString());
+    });
+
+    database.child("Ingredients/Grain")
+        .get().then((value) {
+      print("Retrieved Grains!");
+
+      Map? food = value.value as Map?;
+      food?.forEach((key, value) {
+        grain.add(value);
+
+      });
+
+    }).catchError((error) {
+      print("Failed to get Grains");
+      print(error.toString());
+    });
+
+    database.child("Ingredients/Protein")
+        .get().then((value) {
+      print("Retrieved Proteins!");
+
+      Map? food = value.value as Map?;
+      food?.forEach((key, value) {
+        protein.add(value);
+
+      });
+
+    }).catchError((error) {
+      print("Failed to get Proteins");
+      print(error.toString());
+    });
+
+    database.child("Ingredients/Vegetable")
+        .get().then((value) {
+      print("Retrieved Vegetables!");
+
+      Map? food = value.value as Map?;
+      food?.forEach((key, value) {
+        vegetable.add(value);
+
+      });
+
+    }).catchError((error) {
+      print("Failed to get Vegetable");
       print(error.toString());
     });
 
@@ -72,7 +137,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
                         onPressed: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Breakfast", ingredients, values)
+                              MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Breakfast", dairy, fruit, grain, protein, vegetable, values)
                               )
                           );
                         },
@@ -95,7 +160,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
                       onPressed: () {
                         Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Lunch", ingredients, values)
+                            MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Lunch", dairy, fruit, grain, protein, vegetable, values)
                             )
                         );
                       },
@@ -118,7 +183,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
                     onPressed: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Dinner", ingredients, values)
+                          MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Dinner", dairy, fruit, grain, protein, vegetable, values)
                           )
                       );
                     },
