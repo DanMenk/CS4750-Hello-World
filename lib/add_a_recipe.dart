@@ -61,227 +61,229 @@ class _AddARecipePageState extends State<AddARecipePage> {
   Widget build(BuildContext context) {
 
     var deviceData = MediaQuery.of(context);
-    double unitTitleHeightValue = deviceData.size.height * 0.01;
-    double titlemultiplier = 5;
-    double title = titlemultiplier * unitTitleHeightValue;
+    const double buttonWidthMod = 0.4;
+    double buttonWidth = buttonWidthMod*deviceData.size.width;
+
+    double unitTextHeightValue = deviceData.size.height * 0.01;
+    double buttonMultiplier = 2;
+    double button = buttonMultiplier * unitTextHeightValue;
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text("Add a Recipe",),
+      ),
       body: Center(
         child: Column(
           children: [
-            Expanded(
-              flex: 20,
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                child: Text(
-                    "Add a Recipe",
-                    style: TextStyle(
-                      fontSize: title,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
+            Container(
+              margin: const EdgeInsets.all(20),
+              child: TextField(
+                controller: recipeNameCont,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Recipe Name',
                 ),
               ),
+
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio(
+                    value: 1,
+                    groupValue: _groupValue,
+                    onChanged: radioValueChanged
+                ),
+                const Text("Breakfast"),
+                Radio(
+                    value: 2,
+                    groupValue: _groupValue,
+                    onChanged: radioValueChanged),
+                const Text("Lunch"),
+                Radio(
+                    value: 3,
+                    groupValue: _groupValue,
+                    onChanged: radioValueChanged),
+                const Text("Dinner"),
+              ],
+              ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: buttonWidth,
+                  margin: const EdgeInsets.only(right: 5),
+                  child: ElevatedButton(
+                    onPressed: () async {
+
+                        print("Input: $ingredients");
+                       ingredients = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => IngredientsPage(ingredients, ingredients.length)
+                          )
+                      );
+
+                       print("Output 2: $ingredients");
+                    },
+                    child: Text(
+                      "Ingredients",
+                      style: TextStyle(
+                          fontSize: button,
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+                  width: buttonWidth,
+                  margin: const EdgeInsets.only(right: 5),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      print(steps.length);
+                      steps = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => StepsPage(steps, steps.length)
+                          )
+                      );
+
+                      print(steps);
+                    },
+                    child: Text(
+                      "Recipe Steps",
+                      style: TextStyle(fontSize: button),
+                    ),
+
+                  ),
+                ),
+              ],
             ),
 
-            Expanded(
-              flex: 80,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: TextField(
-                        controller: recipeNameCont,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Recipe Name',
-                        ),
-                      ),
-
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Radio(
-                              value: 1,
-                              groupValue: _groupValue,
-                              onChanged: radioValueChanged
-                          ),
-                          const Text("Breakfast"),
-                          Radio(
-                              value: 2,
-                              groupValue: _groupValue,
-                              onChanged: radioValueChanged),
-                          const Text("Lunch"),
-                          Radio(
-                              value: 3,
-                              groupValue: _groupValue,
-                              onChanged: radioValueChanged),
-                          const Text("Dinner"),
-                        ],
-                        ),
-                      ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            onPressed: () async {
-
-                                print("Input: $ingredients");
-                               ingredients = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => IngredientsPage(ingredients, ingredients.length)
-                                  )
-                              );
-
-                               print("Output 2: $ingredients");
-                            },
-                            child: const Text("Ingredients"),
-
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              print(steps.length);
-                              steps = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => StepsPage(steps, steps.length)
-                                  )
-                              );
-
-                              print(steps);
-                            },
-                            child: const Text("Recipe Steps"),
-
-                          ),
-                        ),
-                      ],
-                    ),
-
-
-                    Container(
-                      margin: const EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          print(ingredients);
-                          for(int i = 0; i < ingredients.length; i++)
-                            {
-                              ingredientName.add(ingredients[i].ingredientName);
-                              type.add(ingredients[i].type);
-                            }
-                          var recipe = {
-                            "ingredients": ingredientName,
-                            "recipeName": recipeNameCont.text,
-                            "steps": steps,
-                            "type": type,
-                          };
-                          var rand = Random().nextInt(4294967296);
-                          for(int i = 0; i < ingredients.length; i++)
-                            {
-                              var rand1 = Random().nextInt(4294967296);
-                              if(type[i] == 1)
-                                {
-                                  await FirebaseDatabase.instance.ref().child("Ingredients/Dairy/ingredient$rand1")
-                                      .set(ingredientName[i])
-                                      .then((value) {
-                                    print("Added the ingredient!");
-                                  }).catchError((error) {
-                                    print("Failed to add ingredient!");
-                                    print(error.toString());
-                                  });
-                                } else if(type[i] == 2)
-                                  {
-                                    await FirebaseDatabase.instance.ref().child("Ingredients/Fruit/ingredient$rand1")
-                                        .set(ingredientName[i])
-                                        .then((value) {
-                                      print("Added the ingredient!");
-                                    }).catchError((error) {
-                                      print("Failed to add ingredient!");
-                                      print(error.toString());
-                                    });
-                                  } else if(type[i] == 3)
-                                    {
-                                      await FirebaseDatabase.instance.ref().child("Ingredients/Grain/ingredient$rand1")
-                                          .set(ingredientName[i])
-                                          .then((value) {
-                                        print("Added the ingredient!");
-                                      }).catchError((error) {
-                                        print("Failed to add ingredient!");
-                                        print(error.toString());
-                                      });
-                                    } else if(type[i] == 4)
-                                      {
-                                        await FirebaseDatabase.instance.ref().child("Ingredients/Protein/ingredient$rand1")
-                                            .set(ingredientName[i])
-                                            .then((value) {
-                                          print("Added the ingredient!");
-                                        }).catchError((error) {
-                                          print("Failed to add ingredient!");
-                                          print(error.toString());
-                                        });
-                                      } else
-                                        {
-                                          await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable/ingredient$rand1")
-                                              .set(ingredientName[i])
-                                              .then((value) {
-                                            print("Added the ingredient!");
-                                          }).catchError((error) {
-                                            print("Failed to add ingredient!");
-                                            print(error.toString());
-                                          });
-                                        }
-
-                            }
-                          print("Done adding ingredients!");
-                          if(_groupValue == 1)
-                            {
-                              await FirebaseDatabase.instance.ref().child("Recipes/Breakfast/Recipe$rand")
-                              .set(recipe)
+            Container(
+              width: buttonWidth,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if(recipeNameCont.text.isNotEmpty && ingredientName.isNotEmpty && type.isNotEmpty && steps.isNotEmpty && _groupValue != 0)
+                    {
+                      print(ingredients);
+                      for(int i = 0; i < ingredients.length; i++)
+                      {
+                        ingredientName.add(ingredients[i].ingredientName);
+                        type.add(ingredients[i].type);
+                      }
+                      var recipe = {
+                        "ingredients": ingredientName,
+                        "recipeName": recipeNameCont.text,
+                        "steps": steps,
+                        "type": type,
+                      };
+                      var rand = Random().nextInt(4294967296);
+                      for(int i = 0; i < ingredients.length; i++)
+                      {
+                        var rand1 = Random().nextInt(4294967296);
+                        if(type[i] == 1)
+                        {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Dairy/ingredient$rand1")
+                              .set(ingredientName[i])
                               .then((value) {
-                                print("Added the Breakfast recipe!");
-                              }).catchError((error) {
-                                print("Failed to add the Breakfast recipe!");
-                                print(error.toString());
-                              });
-                            } else if(_groupValue == 2)
-                          {
-                            await FirebaseDatabase.instance.ref().child("Recipes/Lunch/Recipe$rand")
+                            print("Added the ingredient!");
+                          }).catchError((error) {
+                            print("Failed to add ingredient!");
+                            print(error.toString());
+                          });
+                        } else if(type[i] == 2)
+                        {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Fruit/ingredient$rand1")
+                              .set(ingredientName[i])
+                              .then((value) {
+                            print("Added the ingredient!");
+                          }).catchError((error) {
+                            print("Failed to add ingredient!");
+                            print(error.toString());
+                          });
+                        } else if(type[i] == 3)
+                        {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Grain/ingredient$rand1")
+                              .set(ingredientName[i])
+                              .then((value) {
+                            print("Added the ingredient!");
+                          }).catchError((error) {
+                            print("Failed to add ingredient!");
+                            print(error.toString());
+                          });
+                        } else if(type[i] == 4)
+                        {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Protein/ingredient$rand1")
+                              .set(ingredientName[i])
+                              .then((value) {
+                            print("Added the ingredient!");
+                          }).catchError((error) {
+                            print("Failed to add ingredient!");
+                            print(error.toString());
+                          });
+                        } else
+                        {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable/ingredient$rand1")
+                              .set(ingredientName[i])
+                              .then((value) {
+                            print("Added the ingredient!");
+                          }).catchError((error) {
+                            print("Failed to add ingredient!");
+                            print(error.toString());
+                          });
+                        }
+
+                      }
+                      print("Done adding ingredients!");
+                      if(_groupValue == 1)
+                      {
+                        await FirebaseDatabase.instance.ref().child("Recipes/Breakfast/Recipe$rand")
                             .set(recipe)
                             .then((value) {
-                              print("Added the Lunch recipe!");
-                            }).catchError((error) {
-                              print("Failed to add the Lunch recipe!");
-                              print(error.toString());
-                            });
-                          } else
-                            {
-                              await FirebaseDatabase.instance.ref().child("Recipes/Dinner/Recipe$rand")
-                              .set(recipe)
-                              .then((value) {
-                                print("Added the Dinner recipe!");
-                              }).catchError((error) {
-                                print("Failed to add the Dinner recipe!");
-                                print(error.toString());
-                              });
-                            }
-                          Navigator.pop(context);
+                          print("Added the Breakfast recipe!");
+                        }).catchError((error) {
+                          print("Failed to add the Breakfast recipe!");
+                          print(error.toString());
+                        });
+                      } else if(_groupValue == 2)
+                      {
+                        await FirebaseDatabase.instance.ref().child("Recipes/Lunch/Recipe$rand")
+                            .set(recipe)
+                            .then((value) {
+                          print("Added the Lunch recipe!");
+                        }).catchError((error) {
+                          print("Failed to add the Lunch recipe!");
+                          print(error.toString());
+                        });
+                      } else
+                      {
+                        await FirebaseDatabase.instance.ref().child("Recipes/Dinner/Recipe$rand")
+                            .set(recipe)
+                            .then((value) {
+                          print("Added the Dinner recipe!");
+                        }).catchError((error) {
+                          print("Failed to add the Dinner recipe!");
+                          print(error.toString());
+                        });
+                      }
+                      Navigator.pop(context);
 
-                        },
-                        child: const Text("Done"),
-                      ),
-                    )
+                    }
+                  else
+                    {
+                      print("Recipe Incomplete!");
+                      Navigator.pop(context);
+                    }
 
-
-                  ],
-                )
+                },
+                child: Text(
+                  "Done",
+                  style: TextStyle(fontSize: button),
+                ),
+              ),
             ),
 
           ],

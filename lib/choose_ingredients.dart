@@ -58,35 +58,19 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
     var deviceData = MediaQuery.of(context);
     double buttonWidth = buttonWidthMod*deviceData.size.width;
 
-    double unitTitleHeightValue = deviceData.size.height * 0.01;
-    double titlemultiplier = 5;
-    double title = titlemultiplier * unitTitleHeightValue;
-
     double unitTextHeightValue = deviceData.size.height * 0.01;
     double buttonMultiplier = 2;
     double buttonHeight = buttonMultiplier * unitTextHeightValue;
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text("Choose Your Ingredients",),
+      ),
               body: Center(
                 child: Column(
                   children: [
-
-                    Expanded(
-                      flex: 20,
-                      child: Container(
-                        margin: const EdgeInsets.all(5),
-                          child: Center(
-                            child: Text(
-                                "Choose Your Ingredients",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: title,
-                                  color: Colors.blue,
-                              ),),
-                          )
-                      ),
-                    ),
 
                     Expanded(
                       flex: 70,

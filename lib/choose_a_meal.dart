@@ -18,14 +18,10 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
     var deviceData = MediaQuery.of(context);
     double buttonWidth = buttonWidthMod*deviceData.size.width;
 
-    double unitTitleHeightValue = deviceData.size.height * 0.01;
-    double titlemultiplier = 5;
-    double title = titlemultiplier * unitTitleHeightValue;
-
     double unitTextHeightValue = deviceData.size.height * 0.01;
     double buttonMultiplier = 2;
     double buttonHeight = buttonMultiplier * unitTextHeightValue;
-    
+
     var dairy = [];
     var fruit = [];
     var grain = [];
@@ -110,23 +106,16 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
     });
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text("Choose a Meal",),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-                flex: 30,
-                child: Center(
-                  child: Text(
-                      "Choose Your Meal",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: title,
-                        color: Colors.blue,
-                      ),
-                  ),
-                )
-            ),
+
             Expanded(
               flex: 23,
               child:

@@ -12,16 +12,15 @@ class StepsPage extends StatefulWidget {
 
 class _StepsPageState extends State<StepsPage> {
 
-  late var steps;
+  late var steps = [];
   late int size;
-  late List<TextEditingController> _stepControllers = [];
+  late final List<TextEditingController> _stepControllers = [];
   late ScrollController _scroll = ScrollController();
 
   @override
   void initState() {
     super.initState();
     size = widget.long;
-    steps = [];
     _scroll = ScrollController();
     if(size < 1)
     {
@@ -46,11 +45,27 @@ class _StepsPageState extends State<StepsPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    var deviceData = MediaQuery.of(context);
+    const double buttonWidthMod = 0.4;
+    double buttonWidth = buttonWidthMod*deviceData.size.width;
+
+    double unitTextHeightValue = deviceData.size.height * 0.01;
+    double buttonMultiplier = 2;
+    double button = buttonMultiplier * unitTextHeightValue;
+
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          physics: const ScrollPhysics(),
-          controller: _scroll,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text("Recipe Steps",
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        controller: _scroll,
+        child: Container(
+          margin: const EdgeInsets.only(top: 10),
           child: Column(
             children: [
               ListView.builder(
@@ -82,57 +97,41 @@ class _StepsPageState extends State<StepsPage> {
                       ],
                     );
                   }),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 120,
-                    height: 100,
-                    margin: const EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _stepControllers.add(TextEditingController());
-                        _scroll.jumpTo(_scroll.position.maxScrollExtent);
-                        setState(() {
+              Container(
+                width: buttonWidth,
+                margin: const EdgeInsets.all(5),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _stepControllers.add(TextEditingController());
+                    _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                    setState(() {
 
-                        });
-                      },
-                      child: const Text(
-                        'Add Another Step',
-                        textAlign: TextAlign.center,),
-                    ),
-                  ),
-                  Container(
-                    width: 120,
-                    height: 100,
-                    margin: const EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        var foodSize = _stepControllers.length;
-                        for(int i = foodSize-1; i > 0; i--)
-                        {
-                          if(_stepControllers[i].text == "")
-                          {
-                            _stepControllers.removeAt(i);
-                          }
-                        }
-                        _scroll.jumpTo(_scroll.position.maxScrollExtent);
-                        setState(() {
-
-                        });
-                      },
-                      child: const Text(
-                        "Remove Empty Steps",
-                        textAlign: TextAlign.center,),
-                    ),
-                  ),
-
-                ],
+                    });
+                  },
+                  child: Text(
+                    'Add Another Step',
+                    style: TextStyle(fontSize: button),
+                    textAlign: TextAlign.center,),
+                ),
               ),
               Container(
                 margin: const EdgeInsets.all(5),
                 child: ElevatedButton(
                   onPressed: () {
+
+                    var foodSize = _stepControllers.length;
+                    for(int i = foodSize-1; i > 0; i--)
+                    {
+                      if(_stepControllers[i].text == "")
+                      {
+                        _stepControllers.removeAt(i);
+                      }
+                    }
+                    _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                    setState(() {
+
+                    });
+
                     for(var step in _stepControllers)
                     {
                       steps.remove(step.text);
@@ -150,8 +149,8 @@ class _StepsPageState extends State<StepsPage> {
               ),
             ],
           ),
-
         ),
+
       ),
     );
   }

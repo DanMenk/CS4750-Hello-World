@@ -14,13 +14,14 @@ class _MainMenuPageState extends State<MainMenuPage> {
   @override
   Widget build(BuildContext context) {
 
-    const double buttonWidthMod = 0.6;
     var deviceData = MediaQuery.of(context);
-    double buttonWidth = buttonWidthMod*deviceData.size.width;
 
     double unitTitleHeightValue = deviceData.size.height * 0.01;
     double titlemultiplier = 5;
     double title = titlemultiplier * unitTitleHeightValue;
+
+    const double buttonWidthMod = 0.6;
+    double buttonWidth = buttonWidthMod*deviceData.size.width;
 
     double unitTextHeightValue = deviceData.size.height * 0.01;
     double buttonMultiplier = 2;

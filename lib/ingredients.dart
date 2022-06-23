@@ -81,11 +81,26 @@ class _IngredientsPageState extends State<IngredientsPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    var deviceData = MediaQuery.of(context);
+    const double buttonWidthMod = 0.6;
+    double buttonWidth = buttonWidthMod*deviceData.size.width;
+
+    double unitTextHeightValue = deviceData.size.height * 0.01;
+    double buttonMultiplier = 2;
+    double button = buttonMultiplier * unitTextHeightValue;
+
     return Scaffold(
-          body: Center(
-            child: SingleChildScrollView(
-              physics: const ScrollPhysics(),
-              controller: _scroll,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text("Ingredients",),
+      ),
+          body: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            controller: _scroll,
+            child: Container(
+              margin: EdgeInsets.only(top: 10),
               child: Column(
                 children: [
                   ListView.builder(
@@ -96,7 +111,6 @@ class _IngredientsPageState extends State<IngredientsPage> {
                       itemCount: _foodControllers.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
 
                                      Container(
@@ -218,56 +232,26 @@ class _IngredientsPageState extends State<IngredientsPage> {
                           ],
                         );
                     }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 100,
-                        margin: const EdgeInsets.all(5),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _foodControllers.add(TextEditingController());
-                            _groupValue.add(0);
-                            _scroll.jumpTo(_scroll.position.maxScrollExtent);
-                            setState(() {
+                  Container(
+                    width: buttonWidth,
+                    margin: const EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _foodControllers.add(TextEditingController());
+                        _groupValue.add(0);
+                        _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                        setState(() {
 
-                            });
-                          },
-                          child: const Text(
-                              'Add Another Ingredient',
-                              textAlign: TextAlign.center,),
-                        ),
-                      ),
-                      Container(
-                        width: 120,
-                        height: 100,
-                        margin: const EdgeInsets.all(5),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            var foodSize = _foodControllers.length;
-                            for(int i = foodSize-1; i > 0; i--)
-                              {
-                                if(_foodControllers[i].text == "")
-                                  {
-                                    _foodControllers.removeAt(i);
-                                    _groupValue.removeAt(i);
-                                  }
-                              }
-                            _scroll.jumpTo(_scroll.position.maxScrollExtent);
-                            setState(() {
-
-                            });
-                          },
-                          child: const Text(
-                              "Remove Empty Ingredients",
-                              textAlign: TextAlign.center,),
-                        ),
-                      ),
-
-                    ],
+                        });
+                      },
+                      child: Text(
+                          'Add Another Ingredient',
+                          style: TextStyle(fontSize: button),
+                          textAlign: TextAlign.center,),
+                    ),
                   ),
                   Container(
+                    width: buttonWidth,
                     margin: const EdgeInsets.all(5),
                     child: ElevatedButton(
                       onPressed: () {
@@ -290,13 +274,16 @@ class _IngredientsPageState extends State<IngredientsPage> {
                         Navigator.pop(context, _ingredients);
 
                       },
-                      child: const Text('Done'),
+                      child: Text(
+                        'Done',
+                        style: TextStyle(fontSize: button),
+                      ),
                     ),
                   ),
                 ],
               ),
-
             ),
+
           ),
     );
   }
