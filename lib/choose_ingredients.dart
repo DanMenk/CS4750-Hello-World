@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:recipe_ran/recommendations.dart';
 
 class ChooseIngredientsPage extends StatefulWidget {
-  const ChooseIngredientsPage(this.meal, this.dairy, this.fruit, this.grain, this.protein, this.vegetable, this.values, {Key? key}) : super(key: key);
+  const ChooseIngredientsPage(this.meal, this.dairy, this.fruit, this.grain, this.protein, this.vegetable, this.other, this.values,  {Key? key}) : super(key: key);
+  final List<dynamic> other;
   final List<dynamic> dairy;
   final List<dynamic> fruit;
   final List<dynamic> grain;
@@ -29,6 +30,7 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
   late var grain = [];
   late var protein = [];
   late var vegetable = [];
+  late var other = [];
   late var chosenIngredients = [];
   late var values = [];
 
@@ -42,8 +44,9 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
     grain = widget.grain;
     protein = widget.protein;
     vegetable = widget.vegetable;
+    other = widget.other;
     values = widget.values;
-    for(int i = 0; i < (dairy.length + fruit.length + grain.length + protein.length + vegetable.length); i++)
+    for(int i = 0; i < (dairy.length + fruit.length + grain.length + protein.length + vegetable.length + other.length); i++)
     {
       values.add(false);
     }
@@ -329,6 +332,57 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
                                     ),
                                   ]
                               ),
+                              ExpansionTile(
+
+                                  title: const Text("Other"),
+                                  children: [
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: other.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          if (other.isEmpty)
+                                          {
+                                            return Container();
+                                          } else
+                                          {
+                                            return Container(
+                                              margin: const EdgeInsets.all(5),
+                                              child:
+                                              CheckboxListTile(
+
+                                                title: Text(other[index]),
+                                                onChanged: (bool? value) {
+
+                                                  if(values[index + dairy.length + grain.length + protein.length + fruit.length + vegetable.length] == false)
+                                                  {
+                                                    chosenIngredients.add(other[index]);
+                                                    values[index + dairy.length + grain.length + protein.length + fruit.length + vegetable.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+                                                  else {
+                                                    chosenIngredients.remove(other[index]);
+                                                    values[index + dairy.length + grain.length + protein.length + fruit.length + vegetable.length] = value;
+                                                    setState((){
+
+                                                    });
+                                                  }
+
+                                                },
+                                                value: values[index + dairy.length + grain.length + protein.length + fruit.length + vegetable.length],
+
+                                              ),
+
+                                            );
+                                          }
+
+
+                                        }
+                                    ),
+                                  ]
+                              ),
                             ]
                         ),
                       ),
@@ -367,7 +421,7 @@ class _ChooseIngredientsPageState extends State<ChooseIngredientsPage> {
                                        int similarity = items.length;
                                        int totalIngredients = recipes[recipe]['ingredients'].length;
 
-                                       if( similarity / totalIngredients >= 0.6 && similarity / totalIngredients < 0.8)
+                                       if( similarity / totalIngredients >= 0.5 && similarity / totalIngredients < 0.8)
                                        {
                                          recommended.add(recipes[recipe]);
                                        } else if (similarity / totalIngredients >= 0.8 && similarity / totalIngredients < 1)

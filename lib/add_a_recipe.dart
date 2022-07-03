@@ -1,6 +1,6 @@
 
 import 'dart:math';
-
+import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_ran/ingredients.dart';
@@ -64,6 +64,10 @@ class _AddARecipePageState extends State<AddARecipePage> {
     const double buttonWidthMod = 0.4;
     double buttonWidth = buttonWidthMod*deviceData.size.width;
 
+    double unitTitleHeightValue = deviceData.size.height * 0.01;
+    double titlemultiplier = 5;
+    double title = titlemultiplier * unitTitleHeightValue;
+
     double unitTextHeightValue = deviceData.size.height * 0.01;
     double buttonMultiplier = 2;
     double button = buttonMultiplier * unitTextHeightValue;
@@ -72,19 +76,24 @@ class _AddARecipePageState extends State<AddARecipePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text("Add a Recipe",),
+        title: Text(
+          "Add a Recipe",
+          style: TextStyle(fontSize: title),),
       ),
       body: Center(
         child: Column(
           children: [
             Container(
+              width: buttonWidth*2,
               margin: const EdgeInsets.all(20),
               child: TextField(
+                style: TextStyle(fontSize: buttonWidth/4),
                 controller: recipeNameCont,
                 obscureText: false,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Recipe Name',
+                  labelStyle: TextStyle(fontSize: button*2)
                 ),
               ),
 
@@ -95,7 +104,8 @@ class _AddARecipePageState extends State<AddARecipePage> {
                 Radio(
                     value: 1,
                     groupValue: _groupValue,
-                    onChanged: radioValueChanged
+                    onChanged: radioValueChanged,
+
                 ),
                 const Text("Breakfast"),
                 Radio(
@@ -166,14 +176,15 @@ class _AddARecipePageState extends State<AddARecipePage> {
               width: buttonWidth,
               child: ElevatedButton(
                 onPressed: () async {
+                  for(int i = 0; i < ingredients.length; i++)
+                  {
+                    ingredientName.add(ingredients[i].ingredientName.toLowerCase());
+                    type.add(ingredients[i].type);
+                  }
+
                   if(recipeNameCont.text.isNotEmpty && ingredientName.isNotEmpty && type.isNotEmpty && steps.isNotEmpty && _groupValue != 0)
                     {
                       print(ingredients);
-                      for(int i = 0; i < ingredients.length; i++)
-                      {
-                        ingredientName.add(ingredients[i].ingredientName);
-                        type.add(ingredients[i].type);
-                      }
                       var recipe = {
                         "ingredients": ingredientName,
                         "recipeName": recipeNameCont.text,
@@ -186,6 +197,20 @@ class _AddARecipePageState extends State<AddARecipePage> {
                         var rand1 = Random().nextInt(4294967296);
                         if(type[i] == 1)
                         {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Dairy")
+                              .get().then((value) {
+                                Map<dynamic, dynamic>? val = value.value as Map?;
+                                val?.forEach((key, value) {
+                                  if(value == ingredientName[i])
+                                    {
+                                      ingredientName.removeAt(i);
+                                      print("Removing duplicate ingredient from list of ingredients to add to database.");
+                                    }
+                                });
+                          }).catchError((error) {
+                            print("Check for duplicate ingredients failed");
+
+                          });
                           await FirebaseDatabase.instance.ref().child("Ingredients/Dairy/ingredient$rand1")
                               .set(ingredientName[i])
                               .then((value) {
@@ -196,6 +221,20 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           });
                         } else if(type[i] == 2)
                         {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Fruit")
+                              .get().then((value) {
+                            Map<dynamic, dynamic>? val = value.value as Map?;
+                            val?.forEach((key, value) {
+                              if(value == ingredientName[i])
+                              {
+                                ingredientName.removeAt(i);
+                                print("Removing duplicate ingredient from list of ingredients to add to database.");
+                              }
+                            });
+                          }).catchError((error) {
+                            print("Check for duplicate ingredients failed");
+
+                          });
                           await FirebaseDatabase.instance.ref().child("Ingredients/Fruit/ingredient$rand1")
                               .set(ingredientName[i])
                               .then((value) {
@@ -206,6 +245,20 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           });
                         } else if(type[i] == 3)
                         {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Grain")
+                              .get().then((value) {
+                            Map<dynamic, dynamic>? val = value.value as Map?;
+                            val?.forEach((key, value) {
+                              if(value == ingredientName[i])
+                              {
+                                ingredientName.removeAt(i);
+                                print("Removing duplicate ingredient from list of ingredients to add to database.");
+                              }
+                            });
+                          }).catchError((error) {
+                            print("Check for duplicate ingredients failed");
+
+                          });
                           await FirebaseDatabase.instance.ref().child("Ingredients/Grain/ingredient$rand1")
                               .set(ingredientName[i])
                               .then((value) {
@@ -216,6 +269,20 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           });
                         } else if(type[i] == 4)
                         {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Protein")
+                              .get().then((value) {
+                            Map<dynamic, dynamic>? val = value.value as Map?;
+                            val?.forEach((key, value) {
+                              if(value == ingredientName[i])
+                              {
+                                ingredientName.removeAt(i);
+                                print("Removing duplicate ingredient from list of ingredients to add to database.");
+                              }
+                            });
+                          }).catchError((error) {
+                            print("Check for duplicate ingredients failed");
+
+                          });
                           await FirebaseDatabase.instance.ref().child("Ingredients/Protein/ingredient$rand1")
                               .set(ingredientName[i])
                               .then((value) {
@@ -224,8 +291,22 @@ class _AddARecipePageState extends State<AddARecipePage> {
                             print("Failed to add ingredient!");
                             print(error.toString());
                           });
-                        } else
+                        } else if (type[i] == 5)
                         {
+                          await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable")
+                              .get().then((value) {
+                            Map<dynamic, dynamic>? val = value.value as Map?;
+                            val?.forEach((key, value) {
+                              if(value == ingredientName[i])
+                              {
+                                ingredientName.removeAt(i);
+                                print("Removing duplicate ingredient from list of ingredients to add to database.");
+                              }
+                            });
+                          }).catchError((error) {
+                            print("Check for duplicate ingredients failed");
+
+                          });
                           await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable/ingredient$rand1")
                               .set(ingredientName[i])
                               .then((value) {
@@ -234,7 +315,31 @@ class _AddARecipePageState extends State<AddARecipePage> {
                             print("Failed to add ingredient!");
                             print(error.toString());
                           });
-                        }
+                        } else
+                          {
+                            await FirebaseDatabase.instance.ref().child("Ingredients/Other")
+                                .get().then((value) {
+                              Map<dynamic, dynamic>? val = value.value as Map?;
+                              val?.forEach((key, value) {
+                                if(value == ingredientName[i])
+                                {
+                                  ingredientName.removeAt(i);
+                                  print("Removing duplicate ingredient from list of ingredients to add to database.");
+                                }
+                              });
+                            }).catchError((error) {
+                              print("Check for duplicate ingredients failed");
+
+                            });
+                            await FirebaseDatabase.instance.ref().child("Ingredients/Other/ingredient$rand1")
+                                .set(ingredientName[i])
+                                .then((value) {
+                              print("Added the ingredient!");
+                            }).catchError((error) {
+                              print("Failed to add ingredient!");
+                              print(error.toString());
+                            });
+                          }
 
                       }
                       print("Done adding ingredients!");
@@ -274,6 +379,11 @@ class _AddARecipePageState extends State<AddARecipePage> {
                     }
                   else
                     {
+                      print(recipeNameCont.text);
+                      print(ingredientName);
+                      print(type);
+                      print(steps);
+                      print(_groupValue);
                       print("Recipe Incomplete!");
                       Navigator.pop(context);
                     }

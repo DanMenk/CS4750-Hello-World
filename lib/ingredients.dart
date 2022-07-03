@@ -60,10 +60,13 @@ class _IngredientsPageState extends State<IngredientsPage> {
                 } else if(type == 4)
                   {
                     _groupValue.add(4);
-                  } else
+                  } else if(type == 5)
                     {
                       _groupValue.add(5);
-                    }
+                    } else
+                      {
+                        _groupValue.add(6);
+                      }
 
 
         }
@@ -223,6 +226,24 @@ class _IngredientsPageState extends State<IngredientsPage> {
                                     }
                                     ),
                                 const Text("Vegetable"),
+                                Radio(
+                                    value: 6,
+                                    groupValue: _groupValue[index],
+                                    onChanged: (int? val) {
+                                      _groupValue[index] = val!;
+                                      if(size == 0)
+                                      {
+                                        _ingredients.add(Ingredient(_foodControllers[index].text, _groupValue[index]));
+                                      }
+                                      else
+                                      {
+                                        index >= size ? _ingredients.add(Ingredient(_foodControllers[index].text, _groupValue[index]))
+                                            : _ingredients.replaceRange(index, index + 1,[Ingredient(_foodControllers[index].text, _groupValue[index])]);
+                                      }
+                                      setState((){});
+                                    }
+                                ),
+                                const Text("Other"),
                               ],
                             )
 

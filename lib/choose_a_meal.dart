@@ -27,6 +27,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
     var grain = [];
     var protein = [];
     var vegetable = [];
+    var other = [];
     var values = []; // for checkbox for ingredients on choose_ingredients page
     var database = FirebaseDatabase.instance.ref();
 
@@ -105,6 +106,21 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
       print(error.toString());
     });
 
+    database.child("Ingredients/Other")
+        .get().then((value) {
+      print("Retrieved Other ingredients!");
+
+      Map? food = value.value as Map?;
+      food?.forEach((key, value) {
+        other.add(value);
+
+      });
+
+    }).catchError((error) {
+      print("Failed to get Other ingredients");
+      print(error.toString());
+    });
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -126,7 +142,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
                         onPressed: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Breakfast", dairy, fruit, grain, protein, vegetable, values)
+                              MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Breakfast", dairy, fruit, grain, protein, vegetable, other, values)
                               )
                           );
                         },
@@ -149,7 +165,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
                       onPressed: () {
                         Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Lunch", dairy, fruit, grain, protein, vegetable, values)
+                            MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Lunch", dairy, fruit, grain, protein, vegetable, other, values)
                             )
                         );
                       },
@@ -172,7 +188,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
                     onPressed: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Dinner", dairy, fruit, grain, protein, vegetable, values)
+                          MaterialPageRoute(builder: (context) => ChooseIngredientsPage("Dinner", dairy, fruit, grain, protein, vegetable, other, values)
                           )
                       );
                     },
