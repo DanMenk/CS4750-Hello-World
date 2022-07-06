@@ -20,8 +20,6 @@ main.dart: old template that comes with a new project
 
 main_menu.dart: start page, allows user to add a recipe or choose a meal
 
-Recipe.dart: creates Recipe class
-
 recommendations.dart: accessed after "choose ingredients" page, gives recommendations on what the user should eat based on the ingredients they have
 
 steps.dart: accessed through "add a recipe" page, adds steps to recipe 
