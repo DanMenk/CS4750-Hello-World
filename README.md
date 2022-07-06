@@ -1,16 +1,28 @@
 # recipe_ran
 
-A new Flutter project.
+Recipe Randomizer
 
-## Getting Started
+add_a_recipe.dart: accessed through "main menu" page, page to add a recipe
 
-This project is a starting point for a Flutter application.
+choose_a_meal.dart: accessed through "main menu" page, page that lets user to choose type of meal (breakfast, lunch, or dinner)
 
-A few resources to get you started if this is your first Flutter project:
+choose_ingredients.dart: accessed through "choose a meal" page, page to choose ingredients
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+firebase_options.dart: firebase stuff
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+how_to_cook.dart: accessed through "recommendations" page, shows ingredients and steps to cook a recipe
+
+ingredient.dart: creates Ingredient class
+
+ingredients.dart: accessed through "add a recipe" page, adds ingredients to recipe
+
+main.dart: old template that comes with a new project
+
+main_menu.dart: start page, allows user to add a recipe or choose a meal
+
+Recipe.dart: creates Recipe class
+
+recommendations.dart: accessed after "choose ingredients" page, gives recommendations on what the user should eat based on the ingredients they have
+
+steps.dart: accessed through "add a recipe" page, adds steps to recipe 
+
