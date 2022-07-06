@@ -19,15 +19,6 @@ class _IngredientsPageState extends State<IngredientsPage> {
   late List<int> _groupValue = [];
   late ScrollController _scroll;
 
-
-  void radioValueChanged(int? value, int index) {
-
-    setState(() {
-      _groupValue[index] = value!;
-      print(_groupValue);
-    });
-  }
-
   @override
   void initState() {
     super.initState();

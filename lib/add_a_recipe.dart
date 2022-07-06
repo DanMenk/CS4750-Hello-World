@@ -1,6 +1,5 @@
 
 import 'dart:math';
-import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_ran/ingredients.dart';
@@ -137,7 +136,7 @@ class _AddARecipePageState extends State<AddARecipePage> {
                           )
                       );
 
-                       print("Output 2: $ingredients");
+
                     },
                     child: Text(
                       "Ingredients",
@@ -176,173 +175,260 @@ class _AddARecipePageState extends State<AddARecipePage> {
               width: buttonWidth,
               child: ElevatedButton(
                 onPressed: () async {
+                  var tmpIngredients = [];
+                  var tmpType = [];
                   for(int i = 0; i < ingredients.length; i++)
                   {
                     ingredientName.add(ingredients[i].ingredientName.toLowerCase());
                     type.add(ingredients[i].type);
                   }
 
-                  if(recipeNameCont.text.isNotEmpty && ingredientName.isNotEmpty && type.isNotEmpty && steps.isNotEmpty && _groupValue != 0)
+                  if(recipeNameCont.text.isNotEmpty && ingredientName.isNotEmpty && type.isNotEmpty && steps.isNotEmpty && _groupValue != 0 && ingredientName.length == type.length)
                     {
-                      print(ingredients);
-                      var recipe = {
-                        "ingredients": ingredientName,
-                        "recipeName": recipeNameCont.text,
-                        "steps": steps,
-                        "type": type,
-                      };
+                      print("Ingredients: $ingredientName");
+                      print("Recipe Name: ${recipeNameCont.text}");
+
                       var rand = Random().nextInt(4294967296);
-                      for(int i = 0; i < ingredients.length; i++)
+                      bool removed = false;
+                      int ingredientLength = ingredientName.length;
+                      for(int i = 0; i < ingredientLength; i++)
                       {
-                        var rand1 = Random().nextInt(4294967296);
+                        if(ingredientName.isEmpty)
+                          {
+                            break;
+                          }
+                        if(ingredientName.isNotEmpty && removed)
+                          {
+                            i = 0;
+                            removed = false;
+                          }
+                        print(ingredientName[i]);
                         if(type[i] == 1)
                         {
                           await FirebaseDatabase.instance.ref().child("Ingredients/Dairy")
                               .get().then((value) {
+                                print("hi 1");
                                 Map<dynamic, dynamic>? val = value.value as Map?;
                                 val?.forEach((key, value) {
-                                  if(value == ingredientName[i])
+
+                                  if(ingredientName[i] == value)
                                     {
-                                      ingredientName.removeAt(i);
+                                      ingredientName.remove(value);
+                                      type.remove(1);
+                                      removed = true;
+                                      print("Ingredients: $ingredientName");
                                       print("Removing duplicate ingredient from list of ingredients to add to database.");
                                     }
                                 });
                           }).catchError((error) {
                             print("Check for duplicate ingredients failed");
+                            print(error.toString());
 
                           });
-                          await FirebaseDatabase.instance.ref().child("Ingredients/Dairy/ingredient$rand1")
-                              .set(ingredientName[i])
-                              .then((value) {
-                            print("Added the ingredient!");
-                          }).catchError((error) {
-                            print("Failed to add ingredient!");
-                            print(error.toString());
-                          });
+
                         } else if(type[i] == 2)
                         {
                           await FirebaseDatabase.instance.ref().child("Ingredients/Fruit")
                               .get().then((value) {
+                            print("hi 2");
                             Map<dynamic, dynamic>? val = value.value as Map?;
                             val?.forEach((key, value) {
-                              if(value == ingredientName[i])
+
+                              if(ingredientName[i] == value)
                               {
-                                ingredientName.removeAt(i);
+                                ingredientName.remove(value);
+                                type.remove(2);
+                                removed = true;
+                                print("Ingredients: $ingredientName");
                                 print("Removing duplicate ingredient from list of ingredients to add to database.");
                               }
                             });
                           }).catchError((error) {
                             print("Check for duplicate ingredients failed");
+                            print(error.toString());
 
                           });
-                          await FirebaseDatabase.instance.ref().child("Ingredients/Fruit/ingredient$rand1")
-                              .set(ingredientName[i])
-                              .then((value) {
-                            print("Added the ingredient!");
-                          }).catchError((error) {
-                            print("Failed to add ingredient!");
-                            print(error.toString());
-                          });
+
                         } else if(type[i] == 3)
                         {
                           await FirebaseDatabase.instance.ref().child("Ingredients/Grain")
                               .get().then((value) {
+                            print("hi 3");
                             Map<dynamic, dynamic>? val = value.value as Map?;
                             val?.forEach((key, value) {
-                              if(value == ingredientName[i])
+
+                              if(ingredientName[i] == value)
                               {
-                                ingredientName.removeAt(i);
+                                ingredientName.remove(value);
+                                type.remove(3);
+                                removed = true;
+                                print("Ingredients: $ingredientName");
                                 print("Removing duplicate ingredient from list of ingredients to add to database.");
                               }
                             });
                           }).catchError((error) {
                             print("Check for duplicate ingredients failed");
+                            print(error.toString());
 
                           });
-                          await FirebaseDatabase.instance.ref().child("Ingredients/Grain/ingredient$rand1")
-                              .set(ingredientName[i])
-                              .then((value) {
-                            print("Added the ingredient!");
-                          }).catchError((error) {
-                            print("Failed to add ingredient!");
-                            print(error.toString());
-                          });
+
                         } else if(type[i] == 4)
                         {
                           await FirebaseDatabase.instance.ref().child("Ingredients/Protein")
                               .get().then((value) {
+                            print("hi 4");
                             Map<dynamic, dynamic>? val = value.value as Map?;
                             val?.forEach((key, value) {
-                              if(value == ingredientName[i])
+
+                              if(ingredientName[i] == value)
                               {
-                                ingredientName.removeAt(i);
+                                ingredientName.remove(value);
+                                type.remove(4);
+                                removed = true;
+                                print("Ingredients: $ingredientName");
                                 print("Removing duplicate ingredient from list of ingredients to add to database.");
                               }
                             });
                           }).catchError((error) {
                             print("Check for duplicate ingredients failed");
+                            print(error.toString());
 
                           });
-                          await FirebaseDatabase.instance.ref().child("Ingredients/Protein/ingredient$rand1")
-                              .set(ingredientName[i])
-                              .then((value) {
-                            print("Added the ingredient!");
-                          }).catchError((error) {
-                            print("Failed to add ingredient!");
-                            print(error.toString());
-                          });
+
                         } else if (type[i] == 5)
                         {
                           await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable")
                               .get().then((value) {
+                            print("hi 5");
                             Map<dynamic, dynamic>? val = value.value as Map?;
                             val?.forEach((key, value) {
-                              if(value == ingredientName[i])
+
+                              if(ingredientName[i] == value)
                               {
-                                ingredientName.removeAt(i);
+                                ingredientName.remove(value);
+                                type.remove(5);
+                                removed = true;
+                                print("Ingredients: $ingredientName");
                                 print("Removing duplicate ingredient from list of ingredients to add to database.");
                               }
                             });
                           }).catchError((error) {
                             print("Check for duplicate ingredients failed");
+                            print(error.toString());
 
                           });
-                          await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable/ingredient$rand1")
-                              .set(ingredientName[i])
-                              .then((value) {
-                            print("Added the ingredient!");
-                          }).catchError((error) {
-                            print("Failed to add ingredient!");
-                            print(error.toString());
-                          });
+
                         } else
                           {
+                            print("milk?");
                             await FirebaseDatabase.instance.ref().child("Ingredients/Other")
                                 .get().then((value) {
+                              print("hi 6");
                               Map<dynamic, dynamic>? val = value.value as Map?;
                               val?.forEach((key, value) {
-                                if(value == ingredientName[i])
+
+                                if(ingredientName[i] == value)
                                 {
-                                  ingredientName.removeAt(i);
+                                  ingredientName.remove(value);
+                                  type.remove(6);
+                                  removed = true;
+                                  print("Ingredients: $ingredientName");
                                   print("Removing duplicate ingredient from list of ingredients to add to database.");
                                 }
                               });
                             }).catchError((error) {
                               print("Check for duplicate ingredients failed");
+                              print(error.toString());
 
                             });
-                            await FirebaseDatabase.instance.ref().child("Ingredients/Other/ingredient$rand1")
-                                .set(ingredientName[i])
-                                .then((value) {
-                              print("Added the ingredient!");
-                            }).catchError((error) {
-                              print("Failed to add ingredient!");
-                              print(error.toString());
-                            });
+
                           }
 
                       }
+
+                      for(int i = 0; i < ingredientName.length; i++)
+                        {
+                          var rand1 = Random().nextInt(4294967296);
+                          if(type[i] == 1)
+                            {
+                              await FirebaseDatabase.instance.ref().child("Ingredients/Dairy/ingredient$rand1")
+                                  .set(ingredientName[i])
+                                  .then((value) {
+                                print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                          else if(type[i] == 2)
+                            {
+                              await FirebaseDatabase.instance.ref().child("Ingredients/Fruit/ingredient$rand1")
+                                  .set(ingredientName[i])
+                                  .then((value) {
+                                print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                          else if(type[i] == 3)
+                            {
+                              await FirebaseDatabase.instance.ref().child("Ingredients/Grain/ingredient$rand1")
+                                  .set(ingredientName[i])
+                                  .then((value) {
+                                print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                          else if(type[i] == 4)
+                            {
+                              await FirebaseDatabase.instance.ref().child("Ingredients/Protein/ingredient$rand1")
+                                  .set(ingredientName[i])
+                                  .then((value) {
+                                print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                          else if (type[i] == 5)
+                            {
+                              await FirebaseDatabase.instance.ref().child("Ingredients/Vegetable/ingredient$rand1")
+                                  .set(ingredientName[i])
+                                  .then((value) {
+                                print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                          else
+                            {
+                              await FirebaseDatabase.instance.ref().child("Ingredients/Other/ingredient$rand1")
+                                  .set(ingredientName[i])
+                                  .then((value) {
+                                print("Added the ingredient!");
+                              }).catchError((error) {
+                                print("Failed to add ingredient!");
+                                print(error.toString());
+                              });
+                            }
+                        }
                       print("Done adding ingredients!");
+
+                      for(int i = 0; i < ingredients.length; i++)
+                      {
+                        tmpIngredients.add(ingredients[i].ingredientName.toLowerCase());
+                        tmpType.add(ingredients[i].type);
+                      }
+                      var recipe = {
+                        "ingredients": tmpIngredients,
+                        "recipeName": recipeNameCont.text,
+                        "steps": steps,
+                        "type": tmpType,
+                      };
                       if(_groupValue == 1)
                       {
                         await FirebaseDatabase.instance.ref().child("Recipes/Breakfast/Recipe$rand")

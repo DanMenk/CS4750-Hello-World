@@ -33,7 +33,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
 
     database.child("Ingredients/Dairy")
         .get().then((value) {
-      print("Retrieved Dairy!");
+      //print("Retrieved Dairy!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
@@ -48,7 +48,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
 
     database.child("Ingredients/Fruit")
         .get().then((value) {
-      print("Retrieved Fruits!");
+      //print("Retrieved Fruits!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
@@ -63,7 +63,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
 
     database.child("Ingredients/Grain")
         .get().then((value) {
-      print("Retrieved Grains!");
+      //print("Retrieved Grains!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
@@ -78,7 +78,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
 
     database.child("Ingredients/Protein")
         .get().then((value) {
-      print("Retrieved Proteins!");
+      //print("Retrieved Proteins!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
@@ -93,7 +93,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
 
     database.child("Ingredients/Vegetable")
         .get().then((value) {
-      print("Retrieved Vegetables!");
+      //print("Retrieved Vegetables!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
@@ -108,7 +108,7 @@ class _ChooseAMealPageState extends State<ChooseAMealPage> {
 
     database.child("Ingredients/Other")
         .get().then((value) {
-      print("Retrieved Other ingredients!");
+      //print("Retrieved Other ingredients!");
 
       Map? food = value.value as Map?;
       food?.forEach((key, value) {
